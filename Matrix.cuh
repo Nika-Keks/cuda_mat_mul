@@ -19,6 +19,7 @@ public:
 	static Matrix rand(size_t h, size_t w);
 	Matrix mul(Matrix const& other, MulMode mode) const;
 	float at(size_t i, size_t j) const;
+	float& at(size_t i, size_t j);
 	size_t hight() const;
 	size_t width() const;
 

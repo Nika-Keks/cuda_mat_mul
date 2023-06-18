@@ -75,6 +75,11 @@ float Matrix::at(size_t i, size_t j) const
 	return m_data[i * m_w + j];
 }
 
+float& Matrix::at(size_t i, size_t j)
+{
+	return m_data[i * m_h + j];
+}
+
 Matrix::~Matrix()
 {
 	delete m_data;
@@ -144,8 +149,9 @@ __global__ void warpIntrinsicsMatMul(float* a, float* b, float* c, size_t l, siz
 		__syncthreads();
 
 		float aTileLocal = aTile[tileRow][tileCol];
+		__syncwarp(); 
 		for (size_t i = 0; i < WARP_SIZE; i++)
-			cVal += __shfl_sync(0xffffffff, aTileLocal, i) * bTile[i][tileCol];
+			cVal += __shfl(0xffffffff, aTileLocal, i) * bTile[i][tileCol];
 		__syncthreads();
 	}
 	if (!isOutOfC)
